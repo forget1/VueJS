@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>v-if</title>
+	<script src="http://apps.bdimg.com/libs/vue/1.0.14/vue.js"></script>
+</head>
+<body>
+	<div id="example">
+		<!-- <span>nothing</span>
+		<p v-if="greeting">Hello</p> -->
+
+		<template v-if="ok">
+			<h1>Title</h1>
+			<p>Paragraph 1</p>
+			<p>Paragraph 2</p>
+		</template>
+	</div>
+	<script>
+		var app = new Vue({
+
+			el: "#example",
+			data: {
+				ok: true
+			}
+
+		})
+	</script>
+</body>
+</html>

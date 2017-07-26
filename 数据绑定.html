@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>数据绑定</title>
+	<script src="http://apps.bdimg.com/libs/vue/1.0.14/vue.js"></script>
+</head>
+<body>
+	<div id="text">
+		<span>{{ text }}</span>
+	</div>
+	<div id="app">
+		{{{ MenuBody }}}
+	</div>
+	<script>
+		var text = new Vue({
+		
+			el: "#text",
+			data: {
+				text: '123'
+			}
+		
+		})
+		var app = new Vue({
+		
+			el: "#app",
+			data: {
+				MenuBody: '<p>这是一个段落</p>'
+			}
+		
+		})
+	</script>
+</body>
+</html>

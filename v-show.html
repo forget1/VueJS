@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>v-show</title>
+	<script src="http://apps.bdimg.com/libs/vue/1.0.14/vue.js"></script>
+</head>
+<body>
+	<input type="text" v-model="message" placeholder="edit me">
+	<div id="example">
+		<p v-show="greeting">Hello!</p>
+	</div>
+	<script>
+		var vm = new Vue({
+		
+			el: "#example",
+			data: {
+				greeting: false
+			}
+		
+		})
+	</script>
+</body>
+</html>

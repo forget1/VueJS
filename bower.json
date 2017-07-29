@@ -1,0 +1,22 @@
+{
+  "name": "VueJS",
+  "homepage": "https://github.com/forget1/VueJS",
+  "authors": [
+    "never_forget <2447423830@qq.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "js/lib",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "vue": "1.0.14"
+  }
+}

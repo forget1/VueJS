@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>v-model</title>
+	<script src="http://apps.bdimg.com/libs/vue/1.0.14/vue.js"></script>
+</head>
+<body>
+	<div id="example">
+		<form>
+			姓名：
+			<input type="text" v-model="data.name" placeholder="">
+			<br>
+			性别：
+			<input type="radio" id="man" value="One" v-model="data.sex">
+			<label for="man">男</label>
+			<input type="radio" id="male" value="Two" v-model="data.sex">
+			<label for="male">女</label>
+			<br>
+			兴趣：
+			<input type="checkbox" id="book" value="book" v-model="data.interest">
+			<label for="book">阅读</label>
+			<input type="checkbox" id="swim" value="swim" v-model="data.interest">
+			<label for="swim">游泳</label>
+			<input type="checkbox" id="game" value="game" v-model="data.interest">
+			<label for="game">游戏</label>
+			<input type="checkbox" id="song" value="song" v-model="data.interest">
+			<label for="song">唱歌</label>
+			<br>
+			身份：
+			<select v-model="data.identity">
+				<option value="teacher" selected="selected">教师</option>
+				<option value="doctor">医生</option>
+				<option value="lawyer">律师</option>
+			</select>
+		</form>
+		{{data.name}}
+		<br>
+		{{data.sex}}
+		<br>
+		{{data.interest}}
+		<br>
+		{{data.identity}}
+		<br>
+	</div>
+	<script>
+		var vm = new Vue({
+		
+			el: "#example",
+			data: {
+				data: {
+					name: '',
+					sex: '',
+					interest: [],
+					identity: ''
+				}
+			}
+		})
+
+	</script>
+</body>
+</html>

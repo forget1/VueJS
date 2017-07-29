@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>v-for</title>
+	<script src="js/lib/vue/dist/vue.js"></script>
+</head>
+<body id="example">
+	<ul id="demo">
+		<li v-for="item in items" class="item-{{$index}}">
+			{{ $index }} - {{ parentMssage }}  {{ item.msg }}
+		</li>
+	</ul>
+	<script>
+		var vm = new Vue({
+			el: "#example",
+			data: {
+				parentMssage:'滴滴',
+				items: [
+					{ msg: '滴滴顺风车' },
+					{ msg: '滴滴专车' }
+				]
+			}
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>复选框</title>
+	<script src="../js/lib/vue/dist/vue.js"></script>
+</head>
+<body>
+	<!-- 单选 -->
+	<!-- <div id="exampl">
+		<input type="checkbox" v-model="checked">
+		<label>{{ checked }}</label>
+	</div>
+	<script>
+		var vm = new Vue({
+		
+			el: "#exampl",
+			data: {
+				checked: false
+			}
+		
+		})
+	</script> -->
+	<!-- 多选 -->
+	<div id="example">
+		<input type="checkbox" value="Jack" v-model="checkedNames" id="Jack">
+		<label for="Jack">Jack</label>
+		<input type="checkbox" value="John" v-model="checkedNames" id="John">
+		<label for="John">John</label>
+		<input type="checkbox" value="Mike" v-model="checkedNames" id="Mike">
+		<label for="Mike">Mike</label>
+		<br>
+		<span>Checked name is: {{ checkedNames }}</span>
+	</div>
+	<script>
+		var vm = new Vue({
+		
+			el: "#example",
+			data: {
+				checkedNames: []
+			}
+		
+		})
+	</script>
+</body>
+</html>

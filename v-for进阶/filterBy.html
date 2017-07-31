@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>filterBy</title>
+	<script src="../js/lib/vue/dist/vue.js"></script>
+</head>
+<body id="example">
+	<input type="text" v-model="searchText">
+	<ul>
+		<li v-for="user in users | filterBy searchText in 'name'">{{user.name}}</li>
+	</ul>
+	<script>
+		var vm = new Vue({
+		
+			el: "#example",
+			data: {
+				users: [
+					{
+						name: '快车',
+						tag: '1'
+					},
+					{
+						name: '出租车',
+						tag: '2'
+					},
+					{
+						name: '顺风车',
+						tag: '3'
+					},
+					{
+						name: '专车',
+						tag: '4'
+					},
+				]
+			}
+		
+		})
+	</script>
+</body>
+</html>

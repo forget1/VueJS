@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>循环</title>
+	<script src="../js/lib/vue/dist/vue.js"></script>
+</head>
+<body>
+	<div id="range">
+		<div v-for="n in 10">Hi! {{$index}}</div>
+	</div>
+	<script>
+		var vm = new Vue({
+			el: "#range"
+		})
+	</script>
+</body>
+</html>

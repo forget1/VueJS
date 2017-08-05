@@ -348,3 +348,273 @@ var vm = new Vue({
     	</script>
     </body>
     ```
+
+### v-for
+
+我们可以使用v-for指令基于源数据重复渲染元素。我们也可以使用$index来呈现相对应的数据索引，代码示例如下：
+
+```html
+<body id="example">
+  <ul id="demo">
+    <li v-for="item in items" class="item-{{$index}}">
+	  {{ $index }} - {{ parentMssage }}  {{ item.msg }}
+	</li>
+  </ul>
+  <script>
+    var vm = new Vue({
+	  el: "#example",
+	    data: {
+	      parentMssage:'滴滴',
+		  items: [
+		    { msg: '滴滴顺风车' },
+		    { msg: '滴滴专车' }
+	      ]
+	    }
+	})
+  </script>
+</body>
+```
+
+v-for需要特殊的别名，形式为`item in items`(items是数据数组，item是当前数组元素的别名)。Vue.js 1.0.17及以后版本支持of分隔符，用法如下：
+
+`<div v-for="item of items"></div>`
+
+使用v-for，将得到一个特殊的作用域，类似于AngularJS的隔离作用域，我们需要明确指定prop属性传递数据，否则在组件内将获取不到数据。对于组件内的&lt;p&gt;标签，我们可以使用&lt;slot&gt;
+
+```html
+<my-item v-for="item in items" :item="item" :index="$index">
+  <p>{{item.text}}</p>
+<my-item>
+```
+
+Vue.js包装了被观察数组的变异方法，它们能触发视图更新。被包装的方法有：
+
+- push()
+- pop()
+- shift()
+- unshift()
+- splice()
+- sort()
+- reverse()
+
+Vue.js还增加了两个方法来观测变化：$set、$remove。
+
+我们应该尽量避免直接设置数据绑定的数组元素，因为这些变化不会被Vue.js检测到，因而也不会更新视图渲染。这时，我们可以使用$set方法：
+
+```javascript
+// same as `demo.items[0] = ...` but triggers view update
+demo.item.$set(0, { childMsg: 'Changed!' })
+```
+
+$remove是splice的语法糖，用于从目标数组中查找并删除元素。因此，不必这样：
+
+```javascript
+var index = this.items.indexOf(item)
+if(index !== -1) {
+  this.item.splice(index, 1)
+}
+```
+
+只用这样：
+
+```javascript
+demo.item.$remove(item)
+```
+
+另外，也可以使用filter、concat、slice方法，返回的数组将是一个不同的实例。我们可以用新的数组替换原来的数组。
+
+```javascript
+demo.items = demo.items.filter(function(item) {
+  return items.childMsg.match(/Hello/)
+})
+```
+
+在某些情况下，我们有时可能需要用全新对象(例如，通过API调用创建的对象)来替换数组。因为在默认情况下，v-for通过数据对象的特征来决定对已有作用域和DOM元素的复用程度，这可能导致重新渲染整个列表。但是，如果每个对象都有一个唯一的ID属性，便可以使用track-by特性给Vue.js一个提示，因而Vue.js能尽可能地复用已有实例。假定数据为：
+
+```json
+{
+  items: {
+    {_uid: '88f869d', ...},
+    {_uid: '7496c10', ...}
+  }
+}
+```
+
+可以这样给出提示，代码示例如下：
+
+```html
+<div v-for="item in items" track-by="_uid">
+<!-- content -->
+</div>
+```
+
+在替换数组items时，如果Vue.js遇到一个包含有`_uid: '88f869d'`的新对象，那么它知道可以复用这个已有对象的作用域与DOM元素。
+
+如果没有唯一的键跟踪，则可以使用`track-by="$index"`，它强制让v-for进入原位更新模式：片段不会被移动，而是简单的以对应索引的新值刷新。这种模式也能处理数据数组中重复的值。
+
+这让数据替换非常高效，但是也会付出一定的代价。因为这时DOM节点不再映射数组元素顺序的改变，不能同步临时状态(比如&lt;input&gt;元素的值)，以及组件的私有状态。因此，如果v-for块包含&lt;input&gt;元素或子组件，则要小心使用`track-by="$index"`。
+
+因为JavaScript的限制，Vue.js不能检测到下面数组的变化：
+
+- 直接用索引设置元素，如`vm.items[0] = {}`。
+- 修改数据的长度，如`vm.items.length = 0`。
+
+为了解决前一个问题，Vue.js扩展了观察数组，我们可以使用上面讲过的$set方法：
+
+```javascript
+// 与`example1.items[0] = ...`相同，但是能触发视图更新
+vm.items.$set(0, { childMsg: 'Changed!' })
+```
+
+至于后一个问题，只需用一个空数组替换items即可。
+
+有时我们可能想重复一个包含多个DOM元素的块，在这种情况下，则可以使用&lt;template&gt;标签来包装重复片段。这里的&lt;template&gt;标签只充当一个语义包装器。代码示例如下：
+
+```html
+<ul>
+  <template>
+    <li>{{list.msg}}</li>
+    <li class="divider"></li>
+  </template>
+</ul>
+```
+
+我们也可以使用v-for遍历一个对象，每一个重复的实例都将有一个特殊的属性$key，或者给对象的键值提供一个别名。代码示例如下：
+
+```html
+<body id="example">
+	<ul id="repeat-object">
+		<li v-for="value in primitiveValues">{{$key}} : {{value}}</li>
+		<li>===</li>
+		<li v-for="(key, item) in objectValues">{{key}} : {{item.msg}}</li>
+	</ul>
+	<script>
+		var vm = new Vue({
+		
+			el: "#repeat-object",
+			data: {
+				primitiveValues: {
+					FirstName: 'DIDI',
+					LastName: 'FE',
+					Age: 4
+				},
+				objectValues: {
+					one: {
+						msg: 'Hello'
+					},
+					two: {
+						msg: 'DIDI FE'
+					}
+				}
+			}
+		})
+	</script>
+</body>
+```
+
+**注：ECMAScript5无法检测到新属性添加到一个对象上或者在对象中删除。要处理这种情况，Vue.js增加了三种方法：`$add(key, value)`、`$set(key, value)`和`$delete(key)`，这些方法可以用来添加和删除属性，同时触发视图更新。**
+
+v-for也支持整数。代码示例如下：
+
+```html
+<div id="range">
+  <div v-for="n in 10">Hi! {{$index}}</div>
+</div>
+```
+
+将模版重复整数次。
+
+v-for同时还可以和Vue.js提供的内置过滤器或排序数据一起使用。
+
+1. filterBy
+
+语法： `filterBy searchKey[in dataKey...]`
+
+用法：
+
+```html
+<input type="text" v-model="searchText">
+<ul>
+  <li v-for="user in users | filterBy searchText in 'name'">{{user.name}}</li>
+</ul>
+```
+
+数据如下：
+
+```json
+users: [
+  {
+    name: '快车',
+    tag: '1'
+  },
+  {
+    name: '出租车',
+    tag: '2'
+  },
+  {
+    name: '顺风车',
+    tag: '3'
+  },
+  {
+    name: '专车',
+    tag: '4'
+  },
+]
+```
+
+在&lt;ul&gt;标签中展示滴滴业务类型，在输入框中输入“快车”，&lt;ul&gt;中数据或根据所输入的“快车”，在user的name字段中过滤出我们需要的信息，并展示出来。
+
+2. orderBy
+
+语法：`orderBy sortKey[reverseKey]`
+
+用法： 
+
+```html
+<body id="example">
+	<ul>
+		<li v-for="user in users | orderBy field reverse">{{user.name}}</li>
+	</ul>
+	<script>
+		var vm = new Vue({
+		
+			el: "#example",
+			data: {
+				field: 'tag',
+				reverse: false,
+				users: [
+					{
+						name: '快车',
+						tag: 1
+					},
+					{
+						name: '出租车',
+						tag: 3
+					},
+					{
+						name: '顺风车',
+						tag: 2
+					},
+					{
+						name: '专车',
+						tag: 0
+					}
+				]
+			}
+		
+		})
+	</script>
+</body>
+```
+
+在&lt;ul&gt;标签中根据field变量代表的tag字段正序排列数据。
+
+### v-text
+
+v-text指令可以更新元素的textContent。在内部，{{ Mustache }}插值也被编译为textNode的一个v-text指令。代码示例如下：
+
+```html
+<span v-text="msg"></span>
+<!-- same as -->
+<span>{{ msg }}</span>
+```

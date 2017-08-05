@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>index</title>
+	<script src="../js/lib/vue/dist/vue.js"></script>
+</head>
+<body id="example">
+	<ul id="repeat-object">
+		<li v-for="value in primitiveValues">{{$key}} : {{value}}</li>
+		<li>===</li>
+		<li v-for="(key, item) in objectValues">{{key}} : {{item.msg}}</li>
+	</ul>
+	<script>
+		var vm = new Vue({
+		
+			el: "#repeat-object",
+			data: {
+				primitiveValues: {
+					FirstName: 'DIDI',
+					LastName: 'FE',
+					Age: 4
+				},
+				objectValues: {
+					one: {
+						msg: 'Hello'
+					},
+					two: {
+						msg: 'DIDI FE'
+					}
+				}
+			}
+		})
+	</script>
+</body>
+</html>

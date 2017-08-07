@@ -618,3 +618,17 @@ v-text指令可以更新元素的textContent。在内部，{{ Mustache }}插值�
 <!-- same as -->
 <span>{{ msg }}</span>
 ```
+
+### v-html
+
+v-html指令可以更新元素的innerHTML。内容按普通HTML插入——数据绑定被忽略。如果想复用模版片段，则应当使用partials。
+
+在内部，{{{ Mustache }}}插值也会被编译为锚节点上的一个v-html指令。
+
+**注： 不建议在网站上直接动态渲染任意HTML片段，很容易导致XSS攻击。**
+
+```html
+<div v-html="html"></html>
+<!-- same as -->
+<div>{{{ html }}}</div>
+```

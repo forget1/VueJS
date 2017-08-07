@@ -2,18 +2,21 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>v-text</title>
+	<title>Document</title>
 	<script src="js/lib/vue/dist/vue.js"></script>
 </head>
-<body id="example">
-	<p v-text="msg"></p>
-	<p style="color: red;">{{msg}}</p>
-	<script>\
+<body>
+	<div id="example" v-html="html">
+		<!-- {{{html}}} -->
+	</div>
+	<script>
 		var vm = new Vue({
+		
 			el: "#example",
 			data: {
-				msg: 'v-text测试'
+				html: "<p>这是一个段落</p>"
 			}
+		
 		})
 	</script>
 </body>

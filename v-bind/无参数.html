@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>v-bind无参数</title>
+		<script src="../js/lib/vue/dist/vue.js"></script>
+	</head>
+	<body id="example">
+		<div v-bind="{ id: someProp, 'OTHERAttr': otherProp }"></div>
+		<script>
+			var exampleVM2 = new Vue({
+				el: '#example',
+				data: {
+					someProp: 'idName',
+					otherProp: 'prop'
+				}
+			})
+		</script>
+	</body>
+</html>

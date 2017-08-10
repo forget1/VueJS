@@ -5,14 +5,13 @@
 
 import Watcher from '../../watcher'
 import config from '../../config'
-import { assertProp, initProp, coerceProp } from '../../util/index'
+import { assertProp, initProp, coerceProp } from '../../compiler/compile-props'
 
 const bindingModes = config._propBindingModes
 
 export default {
 
   bind () {
-
     var child = this.vm
     var parent = child._context
     // passed in from compiler directly

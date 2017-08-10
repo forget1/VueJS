@@ -17,6 +17,6 @@
     "tests"
   ],
   "dependencies": {
-    "vue": "1.0.14"
+     "vue": "1.0.19"
   }
 }

@@ -1,8 +1,8 @@
-import config from '../config'
 import Dep from './dep'
 import { arrayMethods } from './array'
 import {
   def,
+  isObject,
   isArray,
   isPlainObject,
   hasProto,
@@ -108,11 +108,13 @@ Observer.prototype.removeVm = function (vm) {
  * the prototype chain using __proto__
  *
  * @param {Object|Array} target
- * @param {Object} proto
+ * @param {Object} src
  */
 
 function protoAugment (target, src) {
+  /* eslint-disable no-proto */
   target.__proto__ = src
+  /* eslint-enable no-proto */
 }
 
 /**
@@ -170,23 +172,28 @@ export function observe (value, vm) {
  * @param {Object} obj
  * @param {String} key
  * @param {*} val
+ * @param {Boolean} doNotObserve
  */
 
-export function defineReactive (obj, key, val) {
+export function defineReactive (obj, key, val, doNotObserve) {
   var dep = new Dep()
 
-  // cater for pre-defined getter/setters
-  var getter, setter
-  if (config.convertAllProperties) {
-    var property = Object.getOwnPropertyDescriptor(obj, key)
-    if (property && property.configurable === false) {
-      return
-    }
-    getter = property && property.get
-    setter = property && property.set
+  var property = Object.getOwnPropertyDescriptor(obj, key)
+  if (property && property.configurable === false) {
+    return
   }
 
-  var childOb = observe(val)
+  // cater for pre-defined getter/setters
+  var getter = property && property.get
+  var setter = property && property.set
+
+  // if doNotObserve is true, only use the child value observer
+  // if it already exists, and do not attempt to create it.
+  // this allows freezing a large object from the root and
+  // avoid unnecessary observation inside v-for fragments.
+  var childOb = doNotObserve
+    ? isObject(val) && val.__ob__
+    : observe(val)
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
@@ -216,7 +223,9 @@ export function defineReactive (obj, key, val) {
       } else {
         val = newVal
       }
-      childOb = observe(newVal)
+      childOb = doNotObserve
+        ? isObject(newVal) && newVal.__ob__
+        : observe(newVal)
       dep.notify()
     }
   })

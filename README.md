@@ -632,3 +632,59 @@ v-html指令可以更新元素的innerHTML。内容按普通HTML插入——数�
 <!-- same as -->
 <div>{{{ html }}}</div>
 ```
+
+### v-bind
+
+v-bind指令用于相应更新HTML特性，将一个或多个attribute，或者一个组件prop动态绑定到表达式。v-bind可以简写为：
+
+```html
+<!-- 绑定 attribute -->
+<img v-bind:src="imageSrc">
+<!-- 缩写 -->
+<img :src="imageSrc">
+```
+
+在绑定class或style时，支持其他类型的值，如数组或对象。代码示例如下：
+
+```html
+<body id="example">
+  <div :class="[classA, { classB: isB, classC: isC }]"></div>
+  <script>
+    var vm = new Vue({
+      el: "#example",
+      data: {
+        classA: 'A',
+        isB: false,
+        isC: true
+      }
+    })
+  </script>
+</body>
+```
+
+没有参数时，可以绑定到一个对象。注意，此时class和style绑定不支持数组和对象(对象key会转换为小写)。代码示例如下：
+
+```html
+<body id="example">
+  <div v-bind="{ id: someProp, 'OTHERAttr': otherProp }"></div>
+  <script>
+    var exampleVM2 = new Vue({
+      el: '#example',
+      data: {
+        someProp: 'idName',
+        otherProp: 'prop'
+      }
+    })
+  </script>
+</body>
+```
+
+在绑定prop时，prop必须在子组件中声明。可以用修饰符指定不同的绑定类型。修饰符为：
+
+- .sync  ——双向绑定，只能用于prop绑定。
+- .once  ——单次绑定，只能用于prop绑定。
+- .camel  ——将绑定的特性名字转换回驼峰命名。只能用于普通HTML特性的绑定，通常用于绑定用驼峰命名的SVG特性，比如viewBox。
+
+```html
+
+```

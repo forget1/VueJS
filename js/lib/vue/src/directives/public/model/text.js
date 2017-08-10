@@ -1,3 +1,5 @@
+/* global jQuery */
+
 import {
   isIE9,
   isAndroid,
@@ -93,12 +95,13 @@ export default {
     // jQuery variable in tests.
     this.hasjQuery = typeof jQuery === 'function'
     if (this.hasjQuery) {
-      jQuery(el).on('change', this.listener)
+      const method = jQuery.fn.on ? 'on' : 'bind'
+      jQuery(el)[method]('change', this.rawListener)
       if (!lazy) {
-        jQuery(el).on('input', this.listener)
+        jQuery(el)[method]('input', this.listener)
       }
     } else {
-      this.on('change', this.listener)
+      this.on('change', this.rawListener)
       if (!lazy) {
         this.on('input', this.listener)
       }
@@ -132,8 +135,9 @@ export default {
   unbind () {
     var el = this.el
     if (this.hasjQuery) {
-      jQuery(el).off('change', this.listener)
-      jQuery(el).off('input', this.listener)
+      const method = jQuery.fn.off ? 'off' : 'unbind'
+      jQuery(el)[method]('change', this.listener)
+      jQuery(el)[method]('input', this.listener)
     }
   }
 }

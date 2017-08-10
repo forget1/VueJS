@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>v-bind有参数</title>
+	<script src="../js/lib/vue/dist/vue.js"></script>
+</head>
+<body id="example">
+	<div :class="[classA, { classB: isB, classC: isC }]"></div>
+	<script>
+		var vm = new Vue({
+			el: "#example",
+			data: {
+				classA: 'A',
+				isB: false,
+				isC: true
+			}
+		})
+	</script>
+</body>
+</html>

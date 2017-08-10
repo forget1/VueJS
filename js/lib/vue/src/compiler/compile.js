@@ -15,25 +15,19 @@ import {
   findRef,
   defineReactive,
   assertAsset,
-  getAttr,
-  hasBindAttr
+  getAttr
 } from '../util/index'
 
 // special binding prefixes
 const bindRE = /^v-bind:|^:/
 const onRE = /^v-on:|^@/
-const argRE = /:(.*)$/
+const dirAttrRE = /^v-([^:]+)(?:$|:(.*)$)/
 const modifierRE = /\.[^\.]+/g
 const transitionRE = /^(v-bind:|:)?transition$/
 
-// terminal directives
-export const terminalDirectives = [
-  'for',
-  'if'
-]
-
 // default directive priority
 const DEFAULT_PRIORITY = 1000
+const DEFAULT_TERMINAL_PRIORITY = 2000
 
 /**
  * Compile a template and return a reusable composite link
@@ -99,6 +93,15 @@ export function compile (el, options, partial) {
  */
 
 function linkAndCapture (linker, vm) {
+  /* istanbul ignore if */
+  if (process.env.NODE_ENV === 'production') {
+    // reset directives before every capture in production
+    // mode, so that when unlinking we don't need to splice
+    // them out (which turns out to be a perf hit).
+    // they are kept in development mode because they are
+    // useful for Vue's own tests.
+    vm._directives = []
+  }
   var originalDirCount = vm._directives.length
   linker()
   var dirs = vm._directives.slice(originalDirCount)
@@ -161,7 +164,7 @@ function teardownDirs (vm, dirs, destroying) {
   var i = dirs.length
   while (i--) {
     dirs[i]._teardown()
-    if (!destroying) {
+    if (process.env.NODE_ENV !== 'production' && !destroying) {
       vm._directives.$remove(dirs[i])
     }
   }
@@ -194,7 +197,6 @@ export function compileAndLinkProps (vm, el, props, scope) {
  *
  * If this is a fragment instance, we only need to compile 1.
  *
- * @param {Vue} vm
  * @param {Element} el
  * @param {Object} options
  * @param {Object} contextOptions
@@ -313,9 +315,10 @@ function compileElement (el, options) {
   }
   var linkFn
   var hasAttrs = el.hasAttributes()
+  var attrs = hasAttrs && toArray(el.attributes)
   // check terminal directives (for & if)
   if (hasAttrs) {
-    linkFn = checkTerminalDirectives(el, options)
+    linkFn = checkTerminalDirectives(el, attrs, options)
   }
   // check element directives
   if (!linkFn) {
@@ -327,7 +330,7 @@ function compileElement (el, options) {
   }
   // normal directives
   if (!linkFn && hasAttrs) {
-    linkFn = compileDirectives(el.attributes, options)
+    linkFn = compileDirectives(attrs, options)
   }
   return linkFn
 }
@@ -518,11 +521,8 @@ function makeChildLinkFn (linkFns) {
 
 function checkElementDirectives (el, options) {
   var tag = el.tagName.toLowerCase()
-  if (commonTagRE.test(tag)) return
-  // special case: give named slot a higher priority
-  // than unnamed slots
-  if (tag === 'slot' && hasBindAttr(el, 'name')) {
-    tag = '_namedSlot'
+  if (commonTagRE.test(tag)) {
+    return
   }
   var def = resolveAsset(options, 'elementDirectives', tag)
   if (def) {
@@ -568,11 +568,12 @@ function checkComponent (el, options) {
  * If it finds one, return a terminal link function.
  *
  * @param {Element} el
+ * @param {Array} attrs
  * @param {Object} options
  * @return {Function} terminalLinkFn
  */
 
-function checkTerminalDirectives (el, options) {
+function checkTerminalDirectives (el, attrs, options) {
   // skip v-pre
   if (getAttr(el, 'v-pre') !== null) {
     return skip
@@ -584,13 +585,26 @@ function checkTerminalDirectives (el, options) {
       return skip
     }
   }
-  var value, dirName
-  for (var i = 0, l = terminalDirectives.length; i < l; i++) {
-    dirName = terminalDirectives[i]
-    value = el.getAttribute('v-' + dirName)
-    if (value != null) {
-      return makeTerminalNodeLinkFn(el, dirName, value, options)
+
+  var attr, name, value, matched, dirName, arg, def, termDef
+  for (var i = 0, j = attrs.length; i < j; i++) {
+    attr = attrs[i]
+    if ((matched = attr.name.match(dirAttrRE))) {
+      def = resolveAsset(options, 'directives', matched[1])
+      if (def && def.terminal) {
+        if (!termDef || ((def.priority || DEFAULT_TERMINAL_PRIORITY) > termDef.priority)) {
+          termDef = def
+          name = attr.name
+          value = attr.value
+          dirName = matched[1]
+          arg = matched[2]
+        }
+      }
     }
+  }
+
+  if (termDef) {
+    return makeTerminalNodeLinkFn(el, dirName, value, options, termDef, name, arg)
   }
 }
 
@@ -607,19 +621,28 @@ skip.terminal = true
  * @param {String} dirName
  * @param {String} value
  * @param {Object} options
- * @param {Object} [def]
+ * @param {Object} def
+ * @param {String} [attrName]
+ * @param {String} [arg]
  * @return {Function} terminalLinkFn
  */
 
-function makeTerminalNodeLinkFn (el, dirName, value, options, def) {
+function makeTerminalNodeLinkFn (el, dirName, value, options, def, attrName, arg) {
   var parsed = parseDirective(value)
   var descriptor = {
     name: dirName,
     expression: parsed.expression,
     filters: parsed.filters,
     raw: value,
-    // either an element directive, or if/for
-    def: def || publicDirectives[dirName]
+    rawName: attrName,
+    def: def
+  }
+  if (attrName) {
+    descriptor.rawName = attrName
+    descriptor.modifiers = parseModifiers(attrName)
+  }
+  if (arg) {
+    descriptor.arg = arg.replace(modifierRE, '')
   }
   // check ref for v-for and router-view
   if (dirName === 'for' || dirName === 'router-view') {
@@ -646,7 +669,7 @@ function makeTerminalNodeLinkFn (el, dirName, value, options, def) {
 function compileDirectives (attrs, options) {
   var i = attrs.length
   var dirs = []
-  var attr, name, value, rawName, rawValue, dirName, arg, modifiers, dirDef, tokens
+  var attr, name, value, rawName, rawValue, dirName, arg, modifiers, dirDef, tokens, matched
   while (i--) {
     attr = attrs[i]
     name = rawName = attr.name
@@ -700,14 +723,9 @@ function compileDirectives (attrs, options) {
     } else
 
     // normal directives
-    if (name.indexOf('v-') === 0) {
-      // check arg
-      arg = (arg = name.match(argRE)) && arg[1]
-      if (arg) {
-        name = name.replace(argRE, '')
-      }
-      // extract directive name
-      dirName = name.slice(2)
+    if ((matched = name.match(dirAttrRE))) {
+      dirName = matched[1]
+      arg = matched[2]
 
       // skip v-else (when used with v-show)
       if (dirName === 'else') {

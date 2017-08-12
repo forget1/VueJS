@@ -490,7 +490,7 @@ vm.items.$set(0, { childMsg: 'Changed!' })
 	</ul>
 	<script>
 		var vm = new Vue({
-		
+
 			el: "#repeat-object",
 			data: {
 				primitiveValues: {
@@ -568,7 +568,7 @@ users: [
 
 语法：`orderBy sortKey[reverseKey]`
 
-用法： 
+用法：
 
 ```html
 <body id="example">
@@ -577,7 +577,7 @@ users: [
 	</ul>
 	<script>
 		var vm = new Vue({
-		
+
 			el: "#example",
 			data: {
 				field: 'tag',
@@ -601,7 +601,7 @@ users: [
 					}
 				]
 			}
-		
+
 		})
 	</script>
 </body>
@@ -686,5 +686,20 @@ v-bind指令用于相应更新HTML特性，将一个或多个attribute，或者�
 - .camel  ——将绑定的特性名字转换回驼峰命名。只能用于普通HTML特性的绑定，通常用于绑定用驼峰命名的SVG特性，比如viewBox。
 
 ```html
-
+<!-- prop 绑定， "prop" 必须在 my-component 组件内声明 -->
+<my-component :prop="someThing"></my-component>
+<!-- 双向 prop 绑定-->
+<my-component :prop.sync="someThing"></my-component>
+<!-- 单次 prop 绑定 -->
+<my-component :prop.once="someThing"></my-component>
 ```
+
+### v-on
+
+v-on指令用于绑定时间监听器。事件类型由参数指定；表达式可以是一个方法的名字或一个内联语句；如果没有修饰符，也可以省略。
+
+使用在普通元素上时，只能监听原生DOM事件；使用在自定义元素组件上时，也可以监听子组件触发的自定义事件。
+
+在监听原生DOM事件时，如果只定义一个参数，DOM event为事件的唯一参数；如果在内联语句处理器中访问原生DOM事件，则可以使用特殊变量$event把它传入方法。
+
+Vue.js 1.0.11 及以后版本在监听自定义事件时，内联语句可以访问一个$arguments属性，它是一个数组，包含了传给子组件的$emit回调的参数。

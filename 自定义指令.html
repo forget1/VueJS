@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <script src="js/lib/vue/dist/vue.js"></script>
+</head>
+<body id="example" @click="up">
+  <div id="demo" v-demo:hello.a.b="msg"></div>
+  <script>
+    Vue.directive('demo', {
+      bind: function() {
+        console.log('demo bound!');
+      },
+      update: function(value) {
+        this.el.innerHTML = 'name - ' + this.name + '<br>' + 'expression - ' + this.expression + '<br>' + 'argument - ' + this.arg + '<br>' + 'modifiers - ' + JSON.stringify(this.modifiers) + '<br>' + 'value - ' + value + '<br>' + 'vm-msg' + this.vm.msg;
+      }
+    })
+    var demo = new Vue({
+      el: '#example',
+      data: {
+        msg: 'Hello!'
+      },
+      methods: {
+        up: function() {
+          console.info('click');
+        }
+      }
+    })
+  </script>
+</body>
+</html>

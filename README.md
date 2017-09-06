@@ -159,16 +159,16 @@ v-if指令可以完全根据表达式的值在DOM中生成或移除一个元素�
 
 ```html
 <div id="example">
-	<span>nothing</span>
-	<p v-if="greeting">Hello</p>
+  <span>nothing</span>
+  <p v-if="greeting">Hello</p>
 </div>
 <script>
-	var app = new Vue({
-		el: "#example",
-		data: {
-			greeting: true
-		}
-	})
+  var app = new Vue({
+    el: "#example",
+    data: {
+      greeting: true
+    }
+  })
 </script>
 ```
 
@@ -176,9 +176,9 @@ v-if指令可以完全根据表达式的值在DOM中生成或移除一个元素�
 
 ```html
 <template v-if="ok">
-	<h1>Title</h1>
-	<p>Paragraph 1</p>
-	<p>Paragraph 2</p>
+  <h1>Title</h1>
+  <p>Paragraph 1</p>
+  <p>Paragraph 2</p>
 </template>
 ```
 
@@ -253,31 +253,31 @@ v-model指令用来在input、select、text、checkbox、radio等表单控件元
 ```html
 <div id="example">
   <form>
-  	姓名：
-  	<input type="text" v-model="data.name" placeholder="">
-  	<br>
-  	性别：
-  	<input type="radio" id="man" value="One" v-model="data.sex">
-  	<label for="man">男</label>
-  	<input type="radio" id="male" value="Two" v-model="data.sex">
-  	<label for="male">女</label>
-  	<br>
-  	兴趣：
-  	<input type="checkbox" id="book" value="book" v-model="data.interest">
-  	<label for="book">阅读</label>
-  	<input type="checkbox" id="swim" value="swim" v-model="data.interest">
-  	<label for="swim">游泳</label>
-  	<input type="checkbox" id="game" value="game" v-model="data.interest">
-  	<label for="game">游戏</label>
-  	<input type="checkbox" id="song" value="song" v-model="data.interest">
-  	<label for="song">唱歌</label>
-  	<br>
-  	身份：
-  	<select v-model="data.identity">
-  		<option value="teacher" selected="selected">教师</option>
-  		<option value="doctor">医生</option>
-  		<option value="lawyer">律师</option>
-  	</select>
+  姓名：
+    <input type="text" v-model="data.name" placeholder="">
+    <br>
+    性别：
+    <input type="radio" id="man" value="One" v-model="data.sex">
+    <label for="man">男</label>
+    <input type="radio" id="male" value="Two" v-model="data.sex">
+    <label for="male">女</label>
+    <br>
+    兴趣：
+    <input type="checkbox" id="book" value="book" v-model="data.interest">
+    <label for="book">阅读</label>
+    <input type="checkbox" id="swim" value="swim" v-model="data.interest">
+    <label for="swim">游泳</label>
+    <input type="checkbox" id="game" value="game" v-model="data.interest">
+    <label for="game">游戏</label>
+    <input type="checkbox" id="song" value="song" v-model="data.interest">
+    <label for="song">唱歌</label>
+    <br>
+    身份：
+    <select v-model="data.identity">
+      <option value="teacher" selected="selected">教师</option>
+      <option value="doctor">医生</option>
+      <option value="lawyer">律师</option>
+    </select>
   </form>
   {{data.name}}
   <br>
@@ -290,15 +290,15 @@ v-model指令用来在input、select、text、checkbox、radio等表单控件元
 </div>
 <script>
 var vm = new Vue({
-	el: "#example",
-	data: {
-		data: {
-			name: '',
-			sex: '',
-			interest: [],
-			identity: ''
-		}
-	}
+  el: "#example",
+  data: {
+    data: {
+      name: '',
+      sex: '',
+      interest: [],
+      identity: ''
+    }
+  }
 })
 </script>
 ```
@@ -335,17 +335,17 @@ var vm = new Vue({
 
     ```html
     <body id="example">
-    	<input type="text" v-model="msg" debounce="5000">
-    	<br>
-    	{{ msg }}
-    	<script>
-    		var vm = new Vue({
-    			el: "#example",
-    			data: {
-    				msg: '内容是在5000ms后才改变的~'
-    			}
-    		})
-    	</script>
+      <input type="text" v-model="msg" debounce="5000">
+      <br>
+      {{ msg }}
+      <script>
+        var vm = new Vue({
+          el: "#example",
+          data: {
+            msg: '内容是在5000ms后才改变的~'
+          }
+        })
+      </script>
     </body>
     ```
 
@@ -357,20 +357,20 @@ var vm = new Vue({
 <body id="example">
   <ul id="demo">
     <li v-for="item in items" class="item-{{$index}}">
-	  {{ $index }} - {{ parentMssage }}  {{ item.msg }}
-	</li>
+    {{ $index }} - {{ parentMssage }}  {{ item.msg }}
+    </li>
   </ul>
   <script>
     var vm = new Vue({
-	  el: "#example",
-	    data: {
-	      parentMssage:'滴滴',
-		  items: [
-		    { msg: '滴滴顺风车' },
-		    { msg: '滴滴专车' }
-	      ]
-	    }
-	})
+    el: "#example",
+      data: {
+        parentMssage:'滴滴',
+      items: [
+        { msg: '滴滴顺风车' },
+        { msg: '滴滴专车' }
+      ]
+    }
+  })
   </script>
 </body>
 ```
@@ -483,31 +483,30 @@ vm.items.$set(0, { childMsg: 'Changed!' })
 
 ```html
 <body id="example">
-	<ul id="repeat-object">
-		<li v-for="value in primitiveValues">{{$key}} : {{value}}</li>
-		<li>===</li>
-		<li v-for="(key, item) in objectValues">{{key}} : {{item.msg}}</li>
-	</ul>
-	<script>
-		var vm = new Vue({
-
-			el: "#repeat-object",
-			data: {
-				primitiveValues: {
-					FirstName: 'DIDI',
-					LastName: 'FE',
-					Age: 4
-				},
-				objectValues: {
-					one: {
-						msg: 'Hello'
-					},
-					two: {
-						msg: 'DIDI FE'
-					}
-				}
-			}
-		})
+  <ul id="repeat-object">
+    <li v-for="value in primitiveValues">{{$key}} : {{value}</li>
+    <li>===</li>
+    <li v-for="(key, item) in objectValues">{{key}} : {{item.msg}}</li>
+  </ul>
+  <script>
+    var vm = new Vue({
+      el: "#repeat-object",
+      data: {
+        primitiveValues: {
+          FirstName: 'DIDI',
+          LastName: 'FE',
+          Age: 4
+        },
+        objectValues: {
+          one: {
+            msg: 'Hello'
+          },
+          two: {
+            msg: 'DIDI FE'
+          }
+        }
+      }
+    })
 	</script>
 </body>
 ```
@@ -572,38 +571,36 @@ users: [
 
 ```html
 <body id="example">
-	<ul>
-		<li v-for="user in users | orderBy field reverse">{{user.name}}</li>
-	</ul>
-	<script>
-		var vm = new Vue({
-
-			el: "#example",
-			data: {
-				field: 'tag',
-				reverse: false,
-				users: [
-					{
-						name: '快车',
-						tag: 1
-					},
-					{
-						name: '出租车',
-						tag: 3
-					},
-					{
-						name: '顺风车',
-						tag: 2
-					},
-					{
-						name: '专车',
-						tag: 0
-					}
-				]
-			}
-
-		})
-	</script>
+  <ul>
+    <li v-for="user in users | orderBy field reverse">{{user.name}}</li>
+  </ul>
+  <script>
+    var vm = new Vue({
+      el: "#example",
+      data: {
+        field: 'tag',
+        reverse: false,
+        users: [
+          {
+            name: '快车',
+            tag: 1
+          },
+          {
+            name: '出租车',
+            tag: 3
+          },
+          {
+            name: '顺风车',
+            tag: 2
+          },
+          {
+            name: '专车',
+            tag: 0
+          }
+        ]
+      }
+    })
+  </script>
 </body>
 ```
 
@@ -703,3 +700,201 @@ v-on指令用于绑定时间监听器。事件类型由参数指定；表达式�
 在监听原生DOM事件时，如果只定义一个参数，DOM event为事件的唯一参数；如果在内联语句处理器中访问原生DOM事件，则可以使用特殊变量$event把它传入方法。
 
 Vue.js 1.0.11 及以后版本在监听自定义事件时，内联语句可以访问一个$arguments属性，它是一个数组，包含了传给子组件的$emit回调的参数。
+
+```html
+<!-- 方法处理器 -->
+<button v-on:click="doThis"></button>
+<!-- 内联语句 -->
+<button v-on:click="doThat('hello', $event)"></button>
+<!-- 缩写 -->
+<button @click="doThis"></button>
+```
+
+v-on后面不仅可以跟参数，还可以增加修饰符
+
+- .stop - 调用 `event.stopPropagation()`。
+- .prevent - 调用 `event.preventDefault()`。
+- .capture - 添加事件侦听器时使用`capture`模式。
+- .self - 只当事件是从侦听器绑定的元素本身触发时才触发回调。
+- .{keyCode | keyAlias} - 只在指定按键上触发回调。Vue.js提供的键值有：`[esc:27, tab:9, enter:13, space:32, 'delete':[8, 46], up:38, left:37, down:10, right:39]`
+
+```html
+<!-- 停止冒泡 -->
+<button @click.stop="doThis"></button>
+<!-- 阻止默认行为 -->
+<button @click.prevent="doThis"></button>
+<!-- 阻止默认行为，没有表达式 -->
+<form @submit.prevent></form>
+<!-- 串联修饰符 -->
+<button @click.stop.prevent="doThis"></button>
+<!-- 键修饰符，键别名 -->
+<input @keyup.enter="onEnter">
+<!-- 键修饰符，键代码 -->
+<input @keyup.13="onEnter">
+```
+
+### v-ref
+
+在父组件上注册一个子组件的索引，便于直接访问。不需要表达式，必须提供参数id。可以通过父组件的`$refs`对象访问子组件。
+
+当`v-ref`和`v-for`一起使用时，注册的值将是一个数组，包含所有的子组件，对应于绑定数组；如果`v-for`使用在一个对象上，注册的值将是一个对象，包含所有的子组件，对应于绑定对象。
+
+**注：** 因为HTML不区分大小写，camelCase风格的名字比如`v-ref:someRef`将全部转换为小写。可以用`v-ref:some-ref`设置`this.$refs.someRef`。 
+
+### v-el
+
+为DOM元素注册一个索引，方便通过所属实例的`$els`访问这个元素。可以用`v-el:some-el`设置`this.$els.someEl`。
+
+```html
+<span v-el:msg>hello</span>
+<span v-el:other-msg>world</span>
+```
+
+通过`this.$els`获取相应的DOM元素
+
+```javascript
+this.$els.msg.textContent // -> "hello"
+this.$els.otherMsg.textContent // -> "world"
+```
+
+### v-pre
+
+编译时跳过当前元素和它的子元素。可以用来显示原始Mustache标签。跳过大量没有指令的节点会加快编译。
+
+### v-cloak
+
+v-cloak这个指令保持在元素上直到关联实例结束编译。当和CSS规则如`[v-cloak]{ display: none }`一起使用时，这个指令可以隐藏未编译的Mustache标签直到实例准备完毕。用法如下：
+
+```html
+[v-cloak] {
+  display: none;
+}
+<div v-cloak>
+  {{ message }}
+</div>
+```
+
+## 自定义指令
+
+### 基础
+
+除了内置指令，Vue.js也允许注册自定义指令。自定义命令提供一种机制将数据的变化映射为DOM行为。
+
+Vue.js用`Vue.directive(id, definition)`方法注册一个全局自定义指令，它接收两个参数：指令ID与定义对象。也可以用组件的directive选项注册一个局部自定义指令。
+
+1. 钩子函数
+
+AngularJS提供了两个函数：compile和link，其中编译函数主要负责将作用域和DOM进行链接；链接函数用来创建可以操作DOM的指令。注意，compile和link选项是互斥的，如果同时设置这两个选项，则会把compile返回的函数当做link函数，而忽略link选项本身。Vue.js同样也提供了几个钩子函数（**都是可选的，相互之间没有制约关系**）：
+
+- bind -- 只调用一次，在指令第一次绑定到元素上时调用。
+- update -- 在bind之后立即以初始值为参数第一次调用，之后每当绑定值变化时调用，参数为新值和旧值。
+- unbind -- 只调用一次，在指令从元素上解绑时调用。
+
+```javascript
+Vue.directive('my-directive', {
+  bind: function() {
+    // 准备工作
+    // 例如，添加时间处理器或只需要运行一次的高耗任务
+  },
+  update: function(newValue, oldValue) {
+    // 值更新时的工作
+    // 也会以初始值为参数调用一次
+  },
+  unbind: function() {
+    // 清理工作
+    // 例如，删除bind()添加的事件监听器
+  }
+})
+```
+
+在注册之后，便可以在Vue.js模版中这样用（记着添加前缀 **v-**）：
+
+```html
+<div v-my-directive="someValue"></div>
+```
+
+当只需要update函数时，可以传入一个函数替代定义对象：
+
+```javascript
+Vue.directive('my-directive', function(value) {
+  // 这个函数用作update()
+})
+```
+
+2. 指令实例属性
+
+所有钩子函数都将被复制到实际的指令对象中，在钩子内this指向这个指令对象。这个对象暴露了一些有用的属性：
+
+- el -- 指令绑定的元素。
+- vm -- 拥有该指令的上下文ViewModel
+- expression -- 指令的表达式，不包括参数和过滤器
+- arg -- 指令的参数。
+- name -- 指令的名字，不包含前缀。
+- modifiers -- 一个对象，包含指令的修饰符。
+- descriptor -- 一个对象，包含指令的解析结果。
+
+**注:**  我们应当将这些属性视为只读，不要修改它们。我们可以给指令对象添加自定义属性，但是注意不要覆盖已有的内部属性。代码示例如下：
+
+```html
+<body id="example" @click="up">
+  <div id="demo" v-demo:hello.a.b="msg"></di>
+</body>
+<script>
+  Vue.directive('demo', {
+    bind: function() {
+      console.log('demo bound!');
+    },
+    update: function(value) {
+      this.el.innerHTML = 'name - ' + this.name + '<br>' + 'expression - ' + this.expression + '<br>' + 'argument - ' + this.argument + '<br>' + 'modifiers - ' + this.modifiers + '<br>' + 'value - ' + this.value + '<br>' + 'vm-msg' + this.vm.msg
+    }
+  })
+  var demo  = new Vue({
+    el: '#example',
+    data: {
+      msg: 'hello!'
+    },
+    method: {
+      up: function() {
+        console.log("click");
+      }
+    }
+  })
+</script>
+``` 
+
+3. 对象字面量
+
+如果指令需要多个值，则可以传入一个JavaScript对象字面量。记住，指令可以使用任意合法的JavaScript表达式。代码示例如下：
+
+```html
+<body>
+  <div id="demo" v-demo="{ color: 'white', text: 'hello!' }"></div>
+</body>
+<script>
+  Vue.directive('demo', function(value) {
+    console.log(value.color);   // "white"
+    console.log(value.text);    // "hello!"
+  })
+  var demo = new Vue({
+    el: '#demo'
+  })
+</script>
+```
+
+4. 字面修饰符
+
+当指令使用了字面修饰符时，它的值将按普通字符串处理并传递给update方法。update方法将只调用一次，因为普通字符串不能相应数据变化。代码示例如下：
+
+```html
+<body>
+  <div id="demo" v-demo.literal="foo bar bar"></div>
+</body>
+<script>
+  Vue.directive('demo', function(value) {
+    console.info(value);
+  })
+  var demo = new Vue({
+    el: '#demo'
+  })
+</script>
+```

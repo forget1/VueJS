@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>v-on</title>
+    <meta charset="UTF-8">
+    <script src="js/lib/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="example">
+        <button v-on:click="greet">Greet</button>
+    </div>
+    <script>
+        var vm = new Vue({
+            el: '#example',
+            data: {
+                name: 'Vue.js'
+            },
+            methods: {
+                greet: function(event) {
+                    alert('Hello ' + this.name + '!')
+                    alert(event.target.tagName)
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

@@ -898,3 +898,72 @@ Vue.directive('my-directive', function(value) {
   })
 </script>
 ```
+
+5. 元素指令
+
+元素指令可以看做是一个轻量组件。可以像下面这样注册一个自定义元素指令：
+
+```html
+<body id="demo">
+  <my-directive class="hello" name="hi"></my-directive>
+</body>
+<script>
+  Vue.elementDirective('my-directive', {
+    // API 同普通指令
+    bind: function() {
+      console.info(this.el.className);
+      console.info(this.el.getAttribute("name"));
+    }
+  })
+  var demo = new Vue({
+    el: '#demo'
+  })
+</script>
+```
+
+元素指令不能接受参数或表达式，但是它可以读取元素的特性，从而决定它的行为。
+
+不同于普通指令，元素指令是终结性的。这意味着，一旦Vue遇到一个元素指令，它将跳过该元素及其子元素——只有该元素指令本身可以操作该元素机器子元素。
+
+### 高级选项
+
+AngularJS提供了几种方法能够将指令内部的隔离作用域同指令外部的作用域进行数据绑定，如本地作用域属性：@和双向绑定：=以及方法引用：&。
+
+```javascript
+scope: {
+  ngModel : '=',  // 将ngModel同指令对象绑定
+  onSend  : '&',  // 将引用传递给这个方法
+  formName: '@'   // 存储与formName相关联的字符串
+}
+```
+
+Vue.js也允许注册自定义指令。自定义指令提供一种机制将数据的变化映射为DOM行为。
+
+1. params
+
+自定义指令可以接受一个params数组，指定一个特性列表，Vue编译器将自动提取绑定元素的这些特性。代码示例如下：
+
+```html
+<body id="demo">
+    <my-directive name="hi" class="hello" a="params"></my-directive>
+  <script>
+    Vue.elementDirective('my-directive', {
+      params: ['a'],
+      bind: function () {
+        console.log(this.params.a);
+        console.error(this.el.getAttribute("name"));
+        console.warn(this.el.className);
+      }
+    })
+    var demo = new Vue({
+      el: '#demo'
+    })
+  </script>
+</body>
+```
+
+此API也支持动态属性。`this.params[key]`会自动保持更新。另外，可以指定一个回调，在值变化时调用。代码示例如下：
+
+```html
+
+```

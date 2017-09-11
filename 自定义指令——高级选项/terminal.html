@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>terminal</title>
+	<script src="../js/lib/vue/dist/vue.js"></script>
+</head>
+<body id="example">
+	<div id="modal"></div>
+	<div v-inject:modal>
+		<h1>header</h1>
+		<p>body</p>
+		<p>footer</p>
+	</div>
+	<script>
+		var FragmentFactory = Vue.FragmentFactory
+		var remove = Vue.util.remove
+		var createAnchor = Vue.util.createAnchor
+		Vue.directive('inject', {
+			terminal: true,
+			bind: function() {
+				var container = document.getElementById(this.arg)
+				this.anchor = createAnchor('v-inject')
+				container.appendChild(this.anchor)
+				remove(this.el)
+				var factory = new FragmentFactory(this.vm, this.el)
+				this.frag = factory.create(this._host, this._scope, this._frag)
+				this.frag.before(this.anchor)
+			},
+			unbind: function() {
+				this.frag.remove()
+				remove(this.anchor)
+			}
+		})
+		// 创建根实例
+		new Vue({
+			el: '#example'
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <script src="../js/lib/vue/dist/vue.js"></script>
+</head>
+
+<body id="demo">
+  <my-directive name="hi" class="hello" v-bind:a="someValue"></my-directive>
+  <script>
+    Vue.elementDirective('my-directive', {
+      params: ['a'],
+      paramWatchers: {
+        a: function(val, oldVal) {
+          console.log('a changed!')
+        }
+      }
+    })
+    var demo = new Vue({
+      el: '#demo',
+      data: {
+        someValue: 'value'
+      }
+    })
+  </script>
+</body>
+
+</html>

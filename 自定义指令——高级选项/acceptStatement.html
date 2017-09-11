@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>acceptStatement</title>
+	<script src="../js/lib/vue/dist/vue.js"></script>
+</head>
+<body id="demo">
+	<div v-my-directive="a++"></div>	
+	{{ a }}
+	<script>
+		Vue.directive('my-directive', {
+			acceptStatement: true,
+			update: function(fn) {
+				// 传入值是一个函数‘
+				// 在调用它时将在所属实例作用域内计算'a++'语句
+				console.info(fn.toString());
+				fn();
+			}
+		})
+		var demoVM = new Vue({
+			el: '#demo',
+			data: {
+				a: 5
+			}
+		})
+	</script>
+</body>
+</html>

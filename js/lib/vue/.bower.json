@@ -28,5 +28,6 @@
   },
   "_source": "https://github.com/vuejs/vue.git",
   "_target": "1.0.19",
-  "_originalSource": "vue"
+  "_originalSource": "vue",
+  "_direct": true
 }

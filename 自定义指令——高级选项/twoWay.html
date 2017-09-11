@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>twoWay</title>
+	<script src="../js/lib/vue/dist/vue.js"></script>
+</head>
+<body id="demo">
+	自定义组件：<input v-example="a.b.c"> <br>
+	父作用域：{{ a.b.c }}
+	<script>
+		Vue.directive('example', {
+			twoWay: true,
+			bind: function() {
+				this.handler = function() {
+					// 把数据写回vm
+					// 如果指令这样绑定 v-example="a.b.c"
+					// 这里将会给 'vm.a.b.c' 赋值
+					this.set(this.el.value);
+				}.bind(this)
+				this.el.addEventListener('input', this.handler)
+			},
+			unbind: function() {
+				this.el.removeEventListener('input', this.handler)
+			}
+		})
+		var demo = new Vue({
+			el: '#demo',
+			data: {
+				a: {b: {c: 2}}
+			}
+		})
+	</script>
+</body>
+</html>

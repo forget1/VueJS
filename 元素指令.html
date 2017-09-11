@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <script src="js/lib/vue/dist/vue.js"></script>
+</head>
+<body id="demo">
+  <my-directive class="hello" name="hi"></my-directive>
+  <script>
+    Vue.elementDirective('my-directive', {
+      bind: function() {
+        console.info(this.el.className);
+        console.info(this.el.getAttribute('name'));
+      }
+    })
+    var demo = new Vue({
+      el: '#demo'
+    })
+  </script>
+</body>
+</html>

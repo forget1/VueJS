@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>deep</title>
+	<script src="../js/lib/vue/dist/vue.js"></script>
+</head>
+<body id="demo">
+	<div v-my-directive="a"></div>
+	<button @click="change">change</button>
+	{{ a.b.c }}
+	<script>
+		Vue.directive('my-directive', {
+			deep: true,
+			update: function(obj) {
+				// 当'obj'的嵌套属性变化时调用
+				console.info(obj.b.c);
+			}
+		})
+		var demo = new Vue({
+			el: "#demo",
+			data: {
+				a: {b: {c: 2}}
+			},
+			methods: {
+				change: function() {
+					demo.a.b.c = 4;
+				}
+			}
+		})
+	</script>
+</body>
+</html>

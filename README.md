@@ -965,5 +965,120 @@ Vue.js也允许注册自定义指令。自定义指令提供一种机制将数�
 此API也支持动态属性。`this.params[key]`会自动保持更新。另外，可以指定一个回调，在值变化时调用。代码示例如下：
 
 ```html
+<body id="demo">
+  <my-directive name="hi" class="hello" v-bind:a="someValue"></my-directive>
+  <script>
+    Vue.elementDirective('my-directive', {
+      params: ['a'],
+      paramWatchers: {
+        a: function(val, oldVal) {
+          console.log('a changed!')
+        }
+      }
+    })
+    var demo = new Vue({
+      el: '#demo',
+      data: {
+        someValue: 'value'
+      }
+    })
+  </script>
+</body>
+```
 
+**注：**类似于props，指令参数的名字在JavaScript中使用camelCase风格，在HTML中对应使用kebab-case风格。例如，假设在模版中有一个参数disable-efffect，在JavaScript中以disableEffect访问它。
+
+2. deep
+
+如果自定义指令使用在一个对象上，当对象内部属性变化时要触发update，则在指令定义对象中指定`deep: true`。代码示例如下：
+
+```html
+<body id="demo">
+  <div v-my-directive="a"></div>
+  <button @click="change">change</button>
+  {{ a.b.c }}
+  <script>
+    Vue.directive('my-directive', {
+      deep: true,
+      update: function(obj) {
+        // 当'obj'的嵌套属性变化时调用
+        console.info(obj.b.c);
+      }
+    })
+    var demo = new Vue({
+      el: "#demo",
+      data: {
+        a: {b: {c: 2}}
+      },
+      methods: {
+        change: function() {
+          demo.a.b.c = 4;
+        }
+      }
+    })
+  </script>
+</body>
+```
+
+
+3. twoWay
+
+如果指令想向Vue实例写回数据，则在指令定义对象中指令`twoWay: true`。该选项允许在指令中使用`this.set(value)`。代码示例如下：
+
+```html
+<body id="demo">
+  自定义组件：<input v-example="a.b.c"> <br>
+  父作用域：{{ a.b.c }}
+  <script>
+    Vue.directive('example', {
+      twoWay: true,
+      bind: function() {
+        this.handler = function() {
+          // 把数据写回vm
+          // 如果指令这样绑定 v-example="a.b.c"
+          // 这里将会给 'vm.a.b.c' 赋值
+          this.set(this.el.value);
+        }.bind(this)
+        this.el.addEventListener('input', this.handler)
+      },
+      unbind: function() {
+        this.el.removeEventListener('input', this.handler)
+      }
+    })
+    var demo = new Vue({
+      el: '#demo',
+      data: {
+        a: {b: {c: 2}}
+      }
+    })
+  </script>
+</body>
+```
+
+4. acceptStatement
+
+传入`acceptStatement: true`可以让自定义指令接受内联语句，就像`v-on`那样。代码示例如下：
+
+```html
+<body id="demo">
+  <div v-my-directive="a++"></div>  
+  {{ a }}
+  <script>
+    Vue.directive('my-directive', {
+      acceptStatement: true,
+      update: function(fn) {
+        // 传入值是一个函数‘
+        // 在调用它时将在所属实例作用域内计算'a++'语句
+        console.info(fn.toString());
+        fn();
+      }
+    })
+    var demoVM = new Vue({
+      el: '#demo',
+      data: {
+        a: 5
+      }
+    })
+  </script>
+</body>
 ```

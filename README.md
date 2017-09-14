@@ -1132,4 +1132,65 @@ Vue通过递归遍历DOM树来编译模块。但是当它遇到terminal指令时
 
 另外，流程控制指令`v-if`和`v-for`在编译过程中始终拥有最高的优先级。
 
-## 常见问题解析
+# 计算属性
+
+## 什么是计算属性
+
+计算属性就是当其依赖属性的值发生变化时，这个属性的值会自动更新，与之相关的DOM部分也会同步自动更新。代码示例如下：
+
+```html
+<div id="example">
+  <input type="text" v-model="didi">
+  <input type="text" v-model="family">
+  <br>
+  didi = {{ didi }}, family = {{ family }}, didiFamily = {{ didiFamily }}
+</div>
+<script>
+  var vm = new Vue({
+    el: '#example',
+    data: {
+      didi: 'didi',
+      family: 'family'
+    },
+    computed: {
+      didiFamily: function() {
+        // 'this' 指向 vm 实例
+        return this.didi + this.family
+      }
+    }
+  })
+</script>
+```
+
+当`vm.didi`和`vm.family`的值发生变化时，`vm.didifamily`的值会自动更新，并且会自动同步更新DOM部分。
+
+前面实例只提供了getter，实际上除了getter，我们还可以设置计算属性的setter。代码示例如下：
+
+```javascript
+var vm = new Vue({
+  el: '#example',
+  data: {
+    didi: 'didi',
+    family: 'family'
+  },
+  computed: {
+    didiFamily: {
+      // 一个计算属性的 getter
+      get: function() {
+        // `this` 指向 vm 实例
+        return this.didi + ' ' + this.family
+      },
+      // 一个计算属性的 setter
+      set: function(newVal) {
+        var names = newVal.split('')
+        this.didi = names[0]
+        this.family = names[1]
+      }
+    }
+  }
+})
+```
+
+当设置`vm.didiFamily`的值时，`vm.didi`和`vm.family`的值也会自动更新。
+
+## 计算属性缓存

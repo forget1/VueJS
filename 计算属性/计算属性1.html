@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <script src="../js/lib/vue/dist/vue.js"></script>
+</head>
+
+<body>
+  <div id="example">
+    <input type="text" v-model="didi">
+    <input type="text" v-model="family">
+    <br> didi = {{ didi }}, family = {{ family }}, didiFamily = {{ didiFamily }}
+  </div>
+  <script>
+    var vm = new Vue({
+      el: '#example',
+      data: {
+        didi: 'didi',
+        family: 'family'
+      },
+      computed: {
+        didiFamily: function() {
+          // 'this' 指向 vm 实例
+          return this.didi + this.family
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>

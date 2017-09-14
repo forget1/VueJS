@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <script src="js/lib/vue/dist/vue.js"></script>
+</head>
+
+<body id="example">
+  <div>
+    <div id="app">
+      <li v-for="item in items" @click="toggle(item)">
+        <span v-show="item.show">{{ item.content }}</span>
+      </li>
+    </div>
+  </div>
+  <script>
+    new Vue({
+      el: "#app",
+      data: function() {
+        return {
+          items: [{
+            content: '1 item',
+            show: true
+          }, {
+            content: '2 item',
+            show: true
+          }, {
+            content: '3 item',
+            show: true
+          }]
+        }
+      },
+      methods: {
+        toggle: function(item) {
+          item.show = !item.show;
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>

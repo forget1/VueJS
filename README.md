@@ -1082,3 +1082,54 @@ Vue.js也允许注册自定义指令。自定义指令提供一种机制将数�
   </script>
 </body>
 ```
+
+5. Terminal
+
+Vue通过递归遍历DOM树来编译模块。但是当它遇到terminal指令时会停止遍历这个元素的后代元素，这个指令将接管编译这个元素及其后代元素的任务。`v-if`和`v-for`都是terminal指令。
+
+用`termianal: true`指定自定义terminal指令，可能还需要`Vue.FragmentFactory`来编译`partial`。代码示例如下：
+
+```html
+<body id="example">
+  <div id="modal"></div>
+  <div v-inject:modal>
+    <h1>header</h1>
+    <p>body</p>
+    <p>footer</p>
+  </div>
+  <script>
+    var FragmentFactory = Vue.FragmentFactory
+    var remove = Vue.util.remove
+    var createAnchor = Vue.util.createAnchor
+
+    Vue.directive('inject', {
+      terminal: true,
+      bind: function() {
+        var container = document.getElementById(this.arg)
+        this.anchor = createAnchor('v-inject')
+        container.appendChild(this.anchor)
+        remove(this.el)
+        var factory = new FragmentFactory(this.vm, this.el)
+        this.frag = factory.create(this._host, this._scope, this._frag)
+        this.frag.before(this.anchor)
+      },
+      unbind: function() {
+        this.frag.remove()
+        remove(this.anchor)
+      }
+    })
+
+    var demo = new Vue({
+      el: '#example'
+    })
+  </script>
+</body>
+```
+
+6. priority
+
+可以给指令指定一个优先级。如果没有指定优先级，普通指令默认是1000，terminal指令默认是2000.同一个元素上优先级高的指令会比其他指令处理的早一些，优先级一样的指令按照它在元素特性列表中出现的顺序依次处理，但是不能保证这个顺序在不同的浏览器中是一致的。
+
+另外，流程控制指令`v-if`和`v-for`在编译过程中始终拥有最高的优先级。
+
+## 常见问题解析

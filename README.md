@@ -1194,3 +1194,57 @@ var vm = new Vue({
 当设置`vm.didiFamily`的值时，`vm.didi`和`vm.family`的值也会自动更新。
 
 ## 计算属性缓存
+
+在Vue.js 0.12.8版本之前，只要读取相应的计算属性，对应的getter就会重新执行。而在Vue.js 0.12.8版本中，在这方面进行了优化，即只有计算属性依赖的属性值发生了改变时才会重新执行getter。
+
+这样也存在一个问题，就是只有Vue实例中被观察的数据属性发生了改变时才会重新执行getter。但是有时候计算属性依赖实时的非观察数据属性。代码示例如下：
+
+```javascript
+var vm = new Vue({
+  data: {
+    welcome: 'welcome to join didiFamily'
+  },
+  computed: {
+    example: function() {
+      return Date.now() + this.welcome
+    }
+  }
+})
+```
+
+我们需要在每次访问example时都取得最新的时间而不是缓存的时间。从Vue.js 0.12.11版本开始，默认提供了缓存开关，在计算属性对象中指定了cache字段来控制是否开启缓存。代码示例如下：
+
+```javascript
+var vm = new Vue({
+  data: {
+    welcome: 'welcome to join didiFamily'
+  },
+  computed: {
+    example: {
+      // 关闭缓存
+      cache: false,
+      get: function() {
+        return Date.now() + this.welcome
+      }
+    }
+  }
+})
+```
+
+设置cache为false关闭缓存之后，每次直接访问`vm.example`时都会重新执行getter方法。
+
+# 表单控件绑定
+
+## 基本用法
+
+### v-text
+
+设置文本框v-model为name，代码示例如下：
+
+```html
+<span>Welcome {{ name }} join DDFE</span>
+<br>
+<input type="text" v-model="name" placeholder="join DDFE">
+```
+
+### checkbox

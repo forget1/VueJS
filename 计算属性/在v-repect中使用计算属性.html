@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script type="text/javascript" src="../js/lib/vue/dist/vue.js"></script>
+</head>
+<body>
+	<div id="items">
+		<my-item v-repeat="items" inline-template>
+			<button>{{ fulltext }}</button>
+		</my-item>
+	</div>
+	<script type="text/javascript">
+		var items = [
+			{number: 1, text: 'one'},
+			{number: 2, text: 'two'}
+		]
+		var vue = new Vue({
+			el: "#items",
+			data: {
+				items: items
+			},
+			components: {
+				'my-item': {
+					replace: true,
+					computed: {
+						fulltext: function() {
+							return 'item ' + this.text
+						}
+					}
+				}
+			}
+		})
+	</script>
+</body>
+</html>

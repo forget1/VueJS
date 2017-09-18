@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Document</title>
+	<script type="text/javascript" src="../js/lib/vue/dist/vue.js"></script>
+</head>
+<body id="example">
+	<input type="checkbox" value="flash" v-model="bizLines" id="flash">
+	<label for="flash">快车</label>
+	<input type="checkbox" value="premium" v-model="bizLines" id="premium">
+	<label for="premium">专车</label>
+	<input type="checkbox" value="bus" v-model="bizLines" id="bus">
+	<label for="bus">巴士</label>	
+	<br>
+	<span>Checked lines: {{ bizLines | json }}</span>
+	<script type="text/javascript">
+		new Vue({
+			el: '#example',
+			data: {
+				bizLines: []
+			}
+		})
+	</script>
+</body>
+</html>

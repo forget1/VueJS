@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Document</title>
+	<script type="text/javascript" src="../js/lib/vue/dist/vue.js"></script>
+</head>
+<body id="example">
+	<input type="radio" id="falsh" value="flash" v-model="bizLines">
+	<label for="falsh">快车</label>
+	<br>
+	<input type="radio" id="bus" value="bus" v-model="bizLines">
+	<label for="bus">巴士</label>
+	<br>
+	<span>Picked: {{ bizLines }}</span>
+	<script type="text/javascript">
+		new Vue({
+			el: '#example',
+			data: {
+				bizLines: ''
+			}
+		})
+	</script>
+</body>
+</html>

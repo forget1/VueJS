@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Document</title>
+	<script type="text/javascript" src="../js/lib/vue/dist/vue.js"></script>
+</head>
+<body id="example">
+	<select v-model="bizLines" multiple>
+		<option selected value="flash">快车</option>
+		<option value="premium">专车</option>
+		<option value="bus">巴士</option>
+	</select>
+	<span>Selected: {{ bizLines }}</span>
+	<script type="text/javascript">
+		new Vue({
+			el: '#example',
+			data: {
+				bizLines: []
+			}
+		})
+	</script>
+</body>
+</html>

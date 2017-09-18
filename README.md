@@ -1248,3 +1248,124 @@ var vm = new Vue({
 ```
 
 ### checkbox
+
+复选框checkbox在表单中会经常使用，下面我们来看看单个checkbox如何使用v-model。代码示例如下：
+
+```html
+<input type="checkbox" id="checkbox" v-model="checked">
+<label for="checkbox">{{ checked }}</label>
+```
+
+当用户勾选了checkbox时，`vm.checked=true`，否则`vm.checked=false`，label中的值也会随之改变。
+
+大多数时候我们使用的都是多个复选框，即一个复选框组。此时，被选中的值将会放入一个数组中。代码示例如下：
+
+```html
+<input type="checkbox" value="flash" v-model="bizLines" id="flash">
+<label for="flash">快车</label>
+<input type="checkbox" value="premium" v-model="bizLines" id="premium">
+<label for="premium">专车</label>
+<input type="checkbox" value="bus" v-model="bizLines" id="bus">
+<label for="bus">巴士</label> 
+<br>
+<span>Checked lines: {{ bizLines | json }}</span>
+<script type="text/javascript">
+  new Vue({
+    el: '#example',
+    data: {
+      bizLines: []
+    }
+  })
+</script>
+```
+
+### radio
+
+当单选钮被选中时，v-model中的变量值会被赋值为对应的value值。代码示例如下：
+
+```html
+<input type="radio" id="falsh" value="flash" v-model="bizLines">
+<label for="falsh">快车</label>
+<br>
+<input type="radio" id="bus" value="bus" v-model="bizLines">
+<label for="bus">巴士</label>
+<br>
+<span>Picked: {{ bizLines }}</span>
+```
+
+### select
+
+因为select控件分为单选和多选，所以v-model在select控件的单选和多选上会有不同的表现。代码示例如下：
+
+```html
+<select v-model="bizLines">
+  <option selected value="flash">快车</option>
+  <option value="premium">专车</option>
+  <option value="bus">巴士</option>
+</select>
+<span>Selected: {{ bizLines }}</span>
+```
+
+当选中的option有value属性时，`vm.selected`为对应option的value值；否则为对应option的text值。
+
+对于多选select控件，被选中的值会放入一个数组中。代码示例如下：
+
+```html
+<select v-model="bizLines" multiple>
+  <option selected value="flash">快车</option>
+  <option value="premium">专车</option>
+  <option value="bus">巴士</option>
+</select>
+<span>Selected: {{ bizLines | json }}</span>
+```
+
+我们也可以通过v-for指令来动态生成option。代码示例如下：
+
+```html
+<select v-model="bizLines">
+  <option v-for="option in options" :value="option.value">
+    {{ option.text }}
+  </option>
+</select>
+<span>bizLines: {{ bizLines }}</span>
+<script type="text/javascript">
+  new Vue({
+    el: '#example',
+    data: {
+      bizLines: 'flash',
+      options: [
+        { text: '快车', value: 'flash' },
+        { text: '专车', value: 'premium' },
+        { text: '巴士', value: 'bus' }
+      ]
+    }
+  })
+</script>
+```
+
+生成的HTML结构代码如下：
+
+```html
+<select>
+  <option value="flash">快车</option>
+  <option value="premium">专车</option>
+  <option value="bus">巴士</option>
+</select>
+```
+
+## 值绑定
+
+在通常情况下，对于radio、checkbox、select组件，通过v-model绑定的值都是字符串，checkbox除外，checkbox可能是布尔值。代码示例如下：
+
+```html
+<!-- 勾选时`picked`的值是字符串a -->
+<input type="radio" v-model="picked" value="a">
+<!-- 勾选时`toggle`的值是布尔值true，否则是布尔值false -->
+<input type="checkbox" v-model="toggle">
+<!-- 勾选时`selected`的值是字符串abc -->
+<select>
+  <option value="abc">ABC</option>
+</select>
+```
+
+有时我们会有动态绑定Vue.js实例属性的需求，这时可以使用v-bind来实现这个需求。通过v-bind来代替直接使用value属性，我们还可以绑定非字符串的值，如数值、对象、数组等。下面我们举例看看在各form表单中各控件如何使用该指令。

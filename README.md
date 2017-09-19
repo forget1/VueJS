@@ -1369,3 +1369,52 @@ var vm = new Vue({
 ```
 
 有时我们会有动态绑定Vue.js实例属性的需求，这时可以使用v-bind来实现这个需求。通过v-bind来代替直接使用value属性，我们还可以绑定非字符串的值，如数值、对象、数组等。下面我们举例看看在各form表单中各控件如何使用该指令。
+
+1. checkbox
+
+```html
+<input type="checkbox" v-model="toggle" :true-value="a" :false-value="b">
+```
+
+- 勾选checkbox时，`vm.toggle === vm.a`。
+- 未勾选checkbox时，`vm.toggle === vm.b`。
+
+**注：** `:true-value`和`:false-value`只适合同一个checkbox组只有一个checkbox的情况。如果有多个checkbox，请使用`:value`进行值绑定。代码示例如下：
+
+```html
+<input type="checkbox" id="falsh" :value="flash" v-model="bizLines">
+<label for="falsh">{{ flash.name }}</label>
+<input type="checkbox" id="premium" :value="premium" v-model="bizLines">
+<label for="premium">{{ premium.name }}</label>
+<input type="checkbox" id="bus" :value="bus" v-model="bizLines">
+<label for="bus">{{ bus.name }}</label>
+<br>
+<span>Checked bizLines: {{ bizLines | json }}</span>
+<script type="text/javascript">
+  new Vue({
+    el: '#example',
+    data: {
+      falsh    : {name: '快车'},
+      premium  : {name: '专车'},
+      bus      : {name: '巴士'},
+      bizLines : []
+    }
+  })
+</script>
+```
+
+2. radio
+
+```html
+<input type="radio" v-model="pick" :value="a">
+```
+
+3. select
+
+```html
+<select v-model="selected">
+  <option :value="{ number: 123 }">123</option>
+</select>
+```
+
+用户勾选时，`vm.selected === { number: 123 }`。

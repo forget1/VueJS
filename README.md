@@ -1418,3 +1418,36 @@ var vm = new Vue({
 ```
 
 用户勾选时，`vm.selected === { number: 123 }`。
+
+## v-model修饰指令
+
+v-model用来在视图与Model之间同步数据，但是有时候我们需要控制同步发生的时机，或者在数据同步到Model之前将数据转换为Number类型。我们可以在v-model指令所在的form控件上添加相应的修饰指令来实现这个需求。
+
+### lazy
+
+在默认情况下，v-model在input事件中同步输入框的值与数据，我们可以添加一个lazy特性，从而将数据改到change事件中发生。代码示例如下：
+
+```html
+<input v-model="msg" lazy><br>
+{{ msg }}
+```
+
+### debounce
+
+设置一个最小的延时，在每次敲击之后延时同步输入框的值到Model中。如果每次更新都需要进行高耗操作（例如，在输入提示中AJAX请求）时，它较为有用。代码示例如下：
+
+```html
+<input v-model="msg" debounce="500"> 
+```
+
+用户输入完毕500ms后，vm.msg才会被更新。
+
+**注：**该指令时用来延迟同步用户输入的数据到Model中，并不会延迟用户输入事件的执行。所以如果要想获取变化后的数据，我们应该用`vm.$watch()`来监听msg的变化，而不是在事件中获取最新数据。
+
+### number
+
+当传给后台的字段类型必须是数值的时候，我们可以在v-model所在控件上使用number指令，该指令会在用户输入被同步到Model中时将其转换为数值类型，如果转换结果为NaN，则对应的Model值还是用户输入的原始值。代码示例如下：
+
+```html
+<input v-model="age" number>
+```

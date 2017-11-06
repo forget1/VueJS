@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../js/lib/vue/dist/vue.js"></script> 
+</head>
+<body id="app">
+    <input type="text" v-model="userInput">
+    <span>{{ msg | concat userInput }}</span>
+    <script>
+        Vue.filter('concat', function(value, input) { 
+            // 'input' === 'this.userInput'
+            return value + input; 
+        })
+        new Vue({
+            el: '#app',
+            data: {
+                msg: 'this is the msg',
+                userInput: ''
+            }
+        })
+        
+    </script>
+</body>
+</html>

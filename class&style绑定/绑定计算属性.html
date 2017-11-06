@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../js/lib/vue/dist/vue.js"></script>
+    <style>
+        .static {
+            width: 200px;
+            height: 200px;
+            border: 1px solid #000;
+        }
+        .didi-orange {
+            background-color: orange;
+        }
+        .didi-large {
+            border-radius: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div id="example" class="static" v-bind:class="ddfe"></div>
+    <script>
+        var vm = new Vue({
+            el: '#example',
+            data: {
+                   didiAge : 4,
+                didiMember : 6000
+            },
+            computed: {
+                ddfe: function() {
+                    return {
+                        'didi-orange' : this.didiAge>3 ? true: false,
+                         'didi-large' : this.didiMember>1000 ? true: false
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../js/lib/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="example">
+        <p>{{ message }}</p>
+        <input type="text" v-model="message | filterExample">
+    </div>
+    <script>
+        Vue.filter('filterExample', {
+            read: function(val) {
+                return 'read ' + val;
+            },
+            write: function(newVal, oldVal) {
+                return oldVal + ' write'
+            }
+        })
+        new Vue({
+            el: '#example',
+            data: {
+                message: 'hello world'
+            }
+        })
+    </script>
+</body>
+</html>

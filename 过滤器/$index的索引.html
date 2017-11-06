@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../js/lib/vue/dist/vue.js"></script>
+</head>
+<body>
+    <!-- 
+        在使用filterBy或者orderBy对表达式进行过滤时，如果同时需要将$index作为参数，此时的$index将会根据表达式数组或对象过滤后的值进行索引。
+     -->
+    <ul id="example">
+        <li v-for="item in items | orderBy 'age' ">
+            {{item.message}} - {{$index}}
+        </li>
+    </ul>
+    <script>
+        new Vue({
+            el: '#example',
+            data: {
+                items: [
+                    {message: '顺风车', age: 1},
+                    {message: '出租车', age: 10},
+                    {message: '快车', age: 6}
+                ]
+            }
+        })
+        // 最终显示顺序为： 顺风车-0，快车-1，出租车-2
+    </script>
+</body>
+</html>

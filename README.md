@@ -1886,7 +1886,7 @@ Vue.filter(ID, function() {})
 v-bind:style的对象语法十分直观——看着非常像CSS，其实它是一个JavaScript对象。CSS属性名可以使用驼峰式或短横分隔命名。代码示例如下：
 
 ```html
-<div id="example" v-bind:style="{color: didiColor, fontSize: fontSize +  'px'}"><>
+<div id="example" v-bind:style="{color: didiColor, fontSize: fontSize +  'px'}"></div>
 <script>
   var vm = new Vue({
     el: '#example',
@@ -1896,4 +1896,52 @@ v-bind:style的对象语法十分直观——看着非常像CSS，其实它是�
     }
   })
 </script>
+```
+
+通常直接绑定到一个样式对象更好，让模版更清晰。代码示例如下：
+
+```html
+<div id="example" v-bind:style="ddfe"></div>
+<script>
+  var vm = new Vue({
+    el: '#example',
+    data: {
+      ddfe: {
+        color: orange,
+        fontSize: '13px'
+      }
+    }
+  })
+</script>
+```
+
+同样的，对象语法常常结合返回对象的计算属性使用。代码示例如下：
+
+```html
+<div id="example" v-bind:style="ddfe"></div>
+<script>
+  var vm = new Vue({
+    el: '#example',
+    data: {
+      didiAge    : 4,
+      didiMember : 6002
+    },
+    computed: {
+      ddfe: function() {
+        return {
+          color    : this.didiAge>3 ? orange: green,
+          fontSize : this.didiMember>1000 ? 20px: 10px
+        }
+      }
+    }
+  })
+</script>
+```
+
+### 数组语法
+
+v-bind:style的数组语法可以将多个样式对象应用到一个元素上。代码示例如下： 
+
+```html
+<div id="example" v-bind:style="[ddfe, didiFamily]"></div>
 ```

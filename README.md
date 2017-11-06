@@ -1944,4 +1944,47 @@ v-bind:style的数组语法可以将多个样式对象应用到一个元素上�
 
 ```html
 <div id="example" v-bind:style="[ddfe, didiFamily]"></div>
+``` 
+
+# 过渡
+
+应用过渡效果，需要在目标元素上使用transition特性。代码示例如下：
+
+```html
+<div v-if="show" transition="my_transition"></div>
+```
+
+transition特性可以与以下资源一起搭配使用：
+
+- v-if
+- v-show
+- v-for（只在插入和删除时触发，使用vue-animated-list组件）
+- 动态组件
+- 在组件的根节点上，并且被Vue实例的DOM方法（如vm.$appendTo(el)）触发
+
+当插入或者删除带有transition特性的元素时，Vue.js将执行以下操作：
+
+- 尝试以ID`my-transition`查找JavaScript过渡钩子对象，该对象通过`Vue.transition(id, hooks)`或`transition`选项注册。如果找到了，将在过渡的不同阶段调用相应的钩子。
+- 自动嗅探目标元素是否有CSS过渡或动画（按照Vue.js指定的方式添加类名即可），并在合适时添加/删除类名。
+- 如果没有找到JavaScript钩子并且也没有检测到CSS过渡/动画，DOM操作（插入/删除）将在下一帧中立即执行。
+
+## CSS过渡
+
+Vue.js为用户定义了一套规则用于很方便地启用CSS过渡，典型的CSS过渡代码示例如下：
+
+```html
+<div v-if="show" transition="expand"></div>
+```
+
+然后为`.expand-transition`、`.expand-enter`和`.expand-leave`添加CSS规则，这样Vue.js就会在相应的阶段检测相应的CSS类的存在并及时添加和删除。添加CSS样式的代码示例如下：
+
+```css
+/* 必须 */
+.expand-transition {
+  transition: all .3s ease;
+  height: 30px;
+  padding: 10px;
+  background-color: #eee;
+  overflow: hidden;
+}
 ```

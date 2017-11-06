@@ -1930,7 +1930,7 @@ v-bind:style的对象语法十分直观——看着非常像CSS，其实它是�
       ddfe: function() {
         return {
           color    : this.didiAge>3 ? orange: green,
-          fontSize : this.didiMember>1000 ? 20px: 10px
+          fontSize : this.didiMember>1000 ? '20px': '10px'
         }
       }
     }

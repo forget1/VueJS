@@ -1987,4 +1987,53 @@ Vue.js为用户定义了一套规则用于很方便地启用CSS过渡，典型�
   background-color: #eee;
   overflow: hidden;
 }
+
+/* .expand-enter 定义进入的开始状态 */
+/* .expand-leave 定义离开的结束状态 */
+.expand-enter, .expand-leave {
+  height: 0;
+  padding: 0 10px;
+  opacity: 0;
+}
+```
+
+可以再同一个元素上通过动态绑定实现不同的过渡，代码示例如下：
+
+```html
+<div v-if="show" :transition="transitionName">hello</div>
+<script>
+  new Vue({
+    el: '...',
+    data: {
+      show: false,
+      transitionName: 'fade'
+    }
+  })
+</script>
+```
+
+除此之外，还可以提供JavaScript钩子函数。
+
+### 内置Class类名
+
+类名的添加以及切换取决于transition特性的值，例如`transition = 'boom'`，会有三个内置类名：
+
+- .boom-transition，始终保留在元素上。
+- .boom-enter，定义进入过渡的开始状态。只应用一帧，然后立即删除。
+- .boom-leave，定义离开过渡的结束状态。在离开过渡开始时生效，在它结束后立即删除。
+
+**注：** 如果transition没有指定值，即id为空，则使用默认类名：.v-transition、.v-enter、.v-leave。
+
+### 自定义CSS类名
+
+用户可以在过渡的JavaScript中声明自定义的CSS过渡类名。这些自定义的类名会覆盖默认的类名。当需要和第三方的CSS动画库如Animate.css配合时会非常有用。代码示例如下：
+
+```html
+<div v-show="ok" class="animated" transition="bounce">Watch me bounce</div>
+<script>
+  Vue.transition('bounce', {
+    enterClass: 'bounceInLeft',
+    leaveClass: 'bounceOutRight'
+  })
+</script>
 ```

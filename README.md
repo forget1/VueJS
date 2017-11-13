@@ -2037,3 +2037,45 @@ Vue.js为用户定义了一套规则用于很方便地启用CSS过渡，典型�
   })
 </script>
 ```
+
+### 动画案例
+
+CSS动画的用法同CSS过渡，区别是在动画中v-enter类名在节点插入DOM后不会立即删除，而是在animationend事件触发时删除。如果要运用JavaScript过渡中的钩子函数，需要显示地将传入的hooks对象中type属性设置为animation。代码示例如下：
+
+```html
+<!-- 为简便起见，省略了animation和transform等兼容性前缀 -->
+<span v-show="show" transition="bounce">Look at me!</span>
+<style type="text/css">
+  .bounce-transition {
+    display: inline-block;
+  }
+  .bounce-enter {
+    animation: bounce-in .5s;
+  }
+  .bounce-leave {
+    animation: bounce-out .5s;
+  }
+  @keyframes bounce-in {
+    0% {
+      transform: scale(0);
+    }
+    50% {
+      transform: scale(1.5);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  @keyframes bounce-out {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.5);
+    }
+    100% {
+      transform: scale(0);
+    }
+  }
+</style>
+```

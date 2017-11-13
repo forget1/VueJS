@@ -2078,4 +2078,117 @@ CSS动画的用法同CSS过渡，区别是在动画中v-enter类名在节点插�
     }
   }
 </style>
-```hgjhg
+```
+
+### 过渡流程
+
+我们以如下的结构为例来说明Vue.js内部是如何处理过渡的：
+
+```html
+<span v-show="show" transtion="">Transtion example</span>
+```
+
+当show属性改变时，Vue.js将相应地插入或删除&lt;div&gt;元素，按照如下规则改变过渡CSS类名（以下每一项在用户没有设置时都将会跳过）：
+
+- 如果show变为false，Vue.js将：
+    + 调用beforeLeave钩子；
+    + 将v-leave类名添加到元素上以触发过渡；
+    + 调用leave钩子；
+    + 等待过渡结束（监听transitionend事件）；
+    + 从DOM中删除元素并删除v-leave类名；
+    + 调用afterLeave钩子。
+- 如果show变为true，Vue.js将：
+    + 调用beforeEnter钩子；
+    + 将v-enter类名添加到元素上；
+    + 把它插入DOM中；
+    + 调用enter钩子；
+    + 强制一次CSS布局，让v-enter确实生效。然后删除v-enter类名，以触发过渡，回到元素的原始状态；
+    + 等待过渡结束；
+    + 调用afterEnter钩子。
+
+另外，如果进入过渡还在进行中时删除元素，将调用enterCancelled钩子，以清理变动或enter创建的计时器；反之，对于离开过渡也是如此。
+
+上面所有钩子函数在调用时，它们的this均指向其所属的Vue实例。编译规则为：过渡在哪个上下文中编译，它的this就指向哪个上下文。
+
+最后，enter和leave可以有第二个可选的回调函数，用于显式控制过渡如何结束。因此不必等待CSS transitionend事件，Vue.js将等待用户手工调用这个回调函数，以结束过渡。代码示例如下：
+
+```javascript
+enter: function(el) {
+  // 没有第二个参数
+  // 由CSS transitionend事件决定过渡何时结束
+}
+
+enter: function(el, done) {
+  // 有第二个参数
+  // 过渡只有在调用`done`时结束
+}
+```
+
+**注：** 当多个元素在一起过渡时，Vue.js会批量处理，只强制一次布局。
+
+## 查找JavaScript过渡
+
+也可以只使用JavaScript钩子，不用定义任何CSS规则。当只使用JavaScript过渡时，enter和leave钩子需要调用done回调，否它们将被同步调用，过渡将立即结束。
+
+建议只使用JavaScript钩子时，为JavaScript过渡显式声明`css:false`，Vue.js将跳过CSS检测。这样也会防止CSS规则对过渡的干扰。
+
+我们使用jQuery来注册一个自定义的JavaScript过渡，代码示例如下：
+
+```javascript
+Vue.transition('fade', {
+  css: false,
+  enter: function(el. done) {
+    // 元素已被插入DOM中
+    // 在动画结束后调用fade
+    $(el).css('opacity', 1)
+    .animate({opacity: 1}, 1000, done)
+  },
+  enterCancelled: function(el) {
+    $(el).stop()
+  },
+  leave: function(el, done) {
+    // 与enter相同
+    $(el).animate({opacity: 0}, 1000, done)
+  },
+  leaveCancelled: function(el) {
+    $(el).stop()
+  }
+})
+```
+
+然后在transition特性中声明，代码示例如下：
+
+```html
+<p transition="fade"></p>
+```
+
+完整注册一个JavaScript过渡的代码示例如下：
+
+```javascript
+Vue.transition(ID, {
+  enter: function() {},
+  leave: function() {}
+})
+```
+
+Vue.transition方法接受两个参数，其中第一个参数时过渡ID，作为用户自定义的transition的唯一标识；第二个参数是一个对象hooks。hooks必须含有enter和leave两个类型为function的属相。这便是最基本的一个JavaScript过渡。除此之外，hooks还可以包含其他属性，代码示例如下：
+
+```javascript
+{
+  type: 'animation',
+  css: true,
+  enterClass: 'bounceInLeft',
+  leaveClass: 'bounceOutRight',
+  beforeEnter: function(el) {},
+  enter: function(el) {},
+  afterEnter: function(el) {},
+  enterCancelled: function(el) {},
+  beforeLeave: function(el) {},
+  leave: function(el) {},
+  afterLeave: function(el) {},
+  leaveCancelled: function(el) {},
+  stagger: function(index) {}
+}
+```
+
+**注：** 以上只是列出hooks对象可以设置的属性，不代表所有属性都需要被设置，属性的值也仅供参考。而且有些属性存在互斥关系。比如设置了css值为false是，enterClass和leaveClass的设置将无效。 

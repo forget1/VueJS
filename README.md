@@ -2224,3 +2224,65 @@ Vue.transition('myStaggeredTransition', {
   }
 })
 ```
+
+# Method
+
+## 如何绑定事件
+
+在原生DOM事件中，可以通过JavaScript给HTML文档元素注册不同的时间处理程序。代码示例如下：
+
+```html
+<button onclick="learnVue()">DDFE</button>
+```
+
+AngularJS也采取了类似的方式，只不过换成了ng-前缀的事件指令：
+
+```html
+<button ng-click="learnVue()">DDFE</button>
+```
+
+类似的，Vue.js也采取了这样的方式来绑定事件，下面进行详细介绍。
+
+### 内联方式
+
+Vue.js在HTML文档元素中采用v-on指令来监听DOM事件，代码示例如下：
+
+```html
+<div id="example">
+  <button v-on:click="greet">Greet</button>
+</div>
+```
+
+这里将一个单击事件处理器click绑定到greet方法，该方法在Vue实例中进行定义。
+
+在这种内联方式下一个事件处理器只能绑定一个方法，如需绑定多个方法，仍需在JavaScript代码中使用addEventListener方法来绑定。
+
+同样的，类似于原生JavaScript以及AngularJS，除了直接绑定到一个方法外，也可以直接使用内联JavaScript语句。代码示例如下：
+
+```html
+<div id="example-2">
+  <button v-on:click="say('hi')">Say Hi</button>
+  <button v-on:click="count = count + 1">Say What</button>
+</div>
+```
+
+与内联表达式相仿，事件处理器限制为一个JavaScript语句。
+
+### methods配置
+
+当用户将click事件与某个方法绑定时，需要在Vue实例当中进行定义，所有定义的方法都放在methods属性下。针对上一节的greet方法定义代码示例如下：
+
+```javascript
+var vm = new Vue({
+  el: '#example',
+  // 在`methods`对象中定义方法
+  methods: {
+    greet: function(event) {
+      // 方法内`this`指向vm
+      alert('Welcome to Vue.js By DDFE!')
+      // 'event'是原生DOM事件
+      alert(event.target.tagName)
+    }
+  }
+})
+```

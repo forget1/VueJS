@@ -2328,4 +2328,80 @@ new Vue({
 
 ## 如何使用修饰符
 
-修饰符（modifiers）是以半角句号（.）开始的特殊后缀，用于表示指令应当以特殊方式绑定。在事件处理器上，Vue.js为v-on提供了4个事件修饰符，
+修饰符（modifiers）是以半角句号（.）开始的特殊后缀，用于表示指令应当以特殊方式绑定。在事件处理器上，Vue.js为v-on提供了4个事件修饰符，即.prevent、.stop、.capture与.self，以使JavaScript代码负责处理纯粹的数据逻辑，而不用处理这些DOM事件的细节。Vue.js还为v-on添加了按键修饰符，用于监听键盘事件。
+
+在使用方式上，事件修饰符可以串联，代码示例如下：
+
+```html
+<a v-on:click.stop.prevent="doThat"></a>
+```
+
+也可以只有修饰符而不绑定事件，代码示例如下：
+
+```html
+<form v-on:submit.prevent></form>
+```
+
+### prevent
+
+在事件处理器中经常需要调用`event.preventDefault()`来阻止事件的默认行为，Vue.js提供了.prevent事件修饰符以使之在HTML中便能完成操作。代码示例如下：
+
+```html
+<!-- 提交事件不再重载页面 -->
+<form v-on:submit.prevent="obSubmit"></form>
+```
+
+### stop
+
+除了`event.preventDefault()`，用于阻止事件冒泡的`event.stopPropahation()`也经常被调用，Vue.js也提供了相应的.stop事件修饰符。代码示例如下：
+
+```html
+<!-- 阻止单击事件冒泡 -->
+<a v-on:click.stop="doThis"></a>
+```
+
+### capture
+
+.capture事件修饰符时Vue.js 1.0.16版本中新增的，表示添加事件侦听器时采用capture即捕获模式。代码示例如下：
+
+```html
+<div v-on:click.capture="doThis">...</div>
+```
+
+### self
+
+.self事件修饰符同样是Vue.js 1.0.16版本中新增的，表示只当事件在该元素本身（而不是子元素）触发时触发回调。代码示例如下：
+
+```html
+<div v-on:click.self="doThat">...</div>
+```
+
+### 按键
+
+监听键盘事件经常需要检测keyCode。Vue.js可以为v-on添加键盘修饰符，代码示例如下：
+
+```html
+<!-- 只有在keyCode是13时调用vm.submit() -->
+<input v-on:keyup.13="submit">
+```
+
+鉴于记住所有的keyCode比较困难，Vue.js为常用的按键提供了别名。代码示例如下：
+
+```html
+<!-- 同上 -->
+<input v-on:keyup.enter="submit">
+<!-- 缩写语法 -->
+<input @keyup.enter="submit">
+```
+
+完整的按键别名如下：
+
+- enter (keycode:13)
+- tab (keycode:9)
+- delete (keycode:8,46)
+- esc (keycode:27)
+- space (keycode:32)
+- up (keycode:38)
+- down (keycode:40)
+- left (keycode:37)
+- right (keycode:39)

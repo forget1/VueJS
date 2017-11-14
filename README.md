@@ -2192,3 +2192,35 @@ Vue.transition方法接受两个参数，其中第一个参数时过渡ID，作�
 ```
 
 **注：** 以上只是列出hooks对象可以设置的属性，不代表所有属性都需要被设置，属性的值也仅供参考。而且有些属性存在互斥关系。比如设置了css值为false是，enterClass和leaveClass的设置将无效。 
+
+## 渐进过渡
+
+transition与v-for一起使用时可以创建渐进过渡，即让v-for中的每个过渡项目可以依次产生过渡效果，而不是一次性同步产生过渡效果。给过渡元素添加一个特性stagger、enter-stagger或leave-stagger（以毫秒作为单位），分别可以控制每个过渡项目的延迟时间、进入时的延迟时间以及离开时的延迟时间。代码示例如下：
+
+```html
+<div v-for="item in list" transition="myStaggeredTransition" stagger="100"></div>
+<style type="text/css">
+  .myStaggeredTransition-transition {
+    transition: all .5s ease;
+    overflow: hidden;
+    margin: 0;
+    height: 20px;
+  }
+  .myStaggerTransition-enter, .myStaggerTransition-leave {
+    opacity: 0;
+    height: 0;
+  }
+</style>
+```
+
+或者提供一个钩子stagger、enter-stagger或leave-stagger，以更好地控制。代码示例如下：
+
+```javascript
+Vue.transition('myStaggeredTransition', {
+  stagger: function(index) {
+    // 每个过渡项目增加50ms延时
+    // 但是最大延时限制为300ms
+    return Math.min(300, index * 50)
+  }
+})
+```

@@ -2285,4 +2285,47 @@ var vm = new Vue({
     }
   }
 })
+
+// 也可以在JavaScript代码中调用方法
+vm.greet()
 ```
+
+对于say方法，可按照如下方式定义：
+
+```javascript
+new Vue({
+  el: '#example-2',
+  methods: {
+    say: function(msg) {
+      alert(msg)
+    }
+  }
+})
+```
+
+需要注意的地方如下：
+
+- methods中定义的方法内的this始终指向创建的Vue实例。
+- 与事件绑定的方法支持参数event即原生DOM事件的传入。
+- 方法用在普通元素上时，只是监听原生DOM事件；用在自定义元素组件上时，也可以监听子组件触发的自定义事件。
+
+### $events应用
+
+在上一节中，在Vue实例中创建的方法需要访问原生DOM事件时可以直接传入event来获取。如果在内联语句处理器中需要访问原生DOM事件时，则可以用一个特殊变量$event将其传入方法中。代码示例如下：
+
+```html
+<button v-on:click="say('hello!', $event)">Submit</button>
+<script type="text/javascript">
+  // ...
+  methods: {
+    say: function(msg, event) {
+      // 现在我们可以访问原生事件对象
+      event.preventDefault()
+    }
+  }
+</script>
+```
+
+## 如何使用修饰符
+
+修饰符（modifiers）是以半角句号（.）开始的特殊后缀，用于表示指令应当以特殊方式绑定。在事件处理器上，Vue.js为v-on提供了4个事件修饰符，

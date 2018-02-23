@@ -21,7 +21,7 @@
 - 博客：[http://www.never-forget.top](http://www.never-forget.top)
 - GitHub：[https://github.com/forget1](https://github.com/forget1)
 - 学院相关课程：Java，数据库，计算机网络等
-- 期望职位：Web前端开发实习
+- 期望职位：Web前端开发
 
 ------
 
